@@ -17,15 +17,16 @@ parsed <- function(directory, threshold = 0) {
 
 }
 
-complete <- function(directory, threshhold = 0) {
+corr <- function(directory, threshhold = 0) {
 
 	p <- parsed(directory, threshhold)
 
 	t <- as.data.frame(table(p$ID))
 
-	overThresh <- t[t["Freq"] > threshhold,]
+	overThresh <- t[t["Freq"] > threshhold,][[1]]
 
-	valsOverThresh <- p[overThresh[[1]],]
+	valsOverThresh <- p[p$ID %in% overThresh,]
+
+	sapply(split(valsOverThresh[2:4], valsOverThresh$ID), function(X) cor(X$sulfate, X$nitrate))
+
 }
-#cor(data.cat$nitrate, data.cat$sulfate, use = "complete.obs")
-#sapply(split(v[2:4], v$ID), function(X) cor(X$sulfate, X$nitrate))

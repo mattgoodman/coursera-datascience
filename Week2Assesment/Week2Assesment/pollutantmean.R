@@ -8,7 +8,7 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
 	data.cat <- do.call(rbind, data.list)
 
 	# concatenate into one big data.frame
-	data.filtered <- complete.cases(data.cat)
+	data.filtered <- complete.cases(data.cat[pollutant])
 
 	data.parsed <- data.cat[data.filtered,]
 

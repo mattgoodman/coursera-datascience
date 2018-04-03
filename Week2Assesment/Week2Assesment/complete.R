@@ -1,24 +1,24 @@
 parsed <- function(directory, id = 1:332) {
 
 	files <- list.files(directory, full.names = T)[id]
-	# locate the files
-	data.list <- lapply(files, read.csv)
-
-	# read the files into a list of data.frames
-	data.cat <- do.call(rbind, data.list)
+		
+	data.cat <- NULL
+	for (f in files) {
+		dat <- read.table(f, header = T, sep = ",", stringsAsFactors = T)
+		data.cat <- rbind(data.cat, dat)
+	}
 
 	# concatenate into one big data.frame
-	data.filtered <- complete.cases(data.cat)
 
-	data.cat[data.filtered,]
+	data.cat[complete.cases(data.cat),]
 	
-
 }
 
 complete <- function(directory, id = 1:332) {
 
-	p<- parsed(directory, id)
-
-	as.data.frame(table(p$ID))
-	
+	p <- parsed(directory, id)
+	p$ID <- factor(p$ID, levels = unique(p$ID))
+	ag <- aggregate(p$ID, by = p["ID"], FUN = length)
+	names(ag) <- c("id", "nobs")
+	ag
 }
